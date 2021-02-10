@@ -21,13 +21,13 @@ This book covers the following exciting features:
 ## Book Outline
 The book is divided into five main parts. The following is a list of the book chapters.
 
-### Part 1
+### Part 1: Getting Started
 
 1) Introduction to PostgreSQL
 2) Getting to know your cluster
 3) Managing Users and Connections
 
-### Part 2
+### Part 2: Interacting with the Database
 
 4) Basic Statements
 5) Advanced Statements
@@ -36,7 +36,7 @@ The book is divided into five main parts. The following is a list of the book ch
 8) Triggers and Rules
 9) Partitioning
 
-### Part 3
+### Part 3: Adminstering the cluster
 
 10)	Users, Roles and Database Security
 11)	Transactions, MVCC, WALs and Checkpoints
@@ -46,12 +46,12 @@ The book is divided into five main parts. The following is a list of the book ch
 15)	Backup and Restore
 16)	Configuration and Monitoring
 
-### Part 4
+### Part 4: Replication
 
 17) Physical Replication
 18) Logical Replication
 
-### Part 5
+### Part 5: The PostgreSQL Ecosystem
 
 19) Usefult tools and useful extensions
 20) Towards PostgreSQL 13
