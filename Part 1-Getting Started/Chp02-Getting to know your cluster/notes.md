@@ -139,3 +139,91 @@ This last record `\--= 36420 evan postgres: evan ace [local] idle` means a user 
 
 
 ### Exploring the disk layout of PGDATA
+All of the PostgreSQL-related stuff is contained in a directory known as `PGDATA`
+
+```sql
+SHOW data_directory;
+/usr/local/var/postgres
+```
+
+```shell
+$ ls
+PG_VERSION		pg_dynshmem		pg_multixact		pg_snapshots		pg_tblspc		postgresql.auto.conf
+base			pg_hba.conf		pg_notify		pg_stat			pg_twophase		postgresql.conf
+global			pg_ident.conf		pg_replslot		pg_stat_tmp		pg_wal			postmaster.opts
+pg_commit_ts		pg_logical		pg_serial		pg_subtrans		pg_xact			postmaster.pid
+```
+
+**Objects in the PGDATA directory**
+
+`base` is a directory that contains all the users' data
+
+Every file is name after a numberic identifier named `OID`(**Object Identifier** or **filenode**). Execute the odi2name utility to get a list of available databases:
+* -d: speficy a table name
+* -f: specicy a filenode
+
+```shell
+$ oid2name
+All databases:
+    Oid     Database Name  Tablespace
+-------------------------------------
+  45349               ace  pg_default
+  16384  postgis_cookbook  pg_default
+  13709          postgres  pg_default
+  17626              rome  pg_default
+  13708         template0  pg_default
+      1         template1  pg_default
+
+```
+
+```shell
+$ oid2name -d ace
+From database "ace":
+  Filenode                  Table Name
+--------------------------------------
+     46383                  auth_group
+     46393      auth_group_permissions
+     46375             auth_permission
+     46401                   auth_user
+     46411            auth_user_groups
+     46419  auth_user_user_permissions
+     46479            django_admin_log
+     46365         django_content_type
+     46354           django_migrations
+     46510              django_session
+     46554           reporter_counties
+     46529         reporter_incidences
+     46601             site_status_msl
+     46542             site_status_poi
+     45655             spatial_ref_sys
+```
+
+```shell
+$ oid2name -d ace -f 46542
+From database "ace":
+  Filenode       Table Name
+---------------------------
+     46542  site_status_poi
+
+```
+
+PostgreSQL does not allow a single file to be greater than 1GB. In case a table grows beyong the limit, the table will be stored in chunks whose filenode are named as:
+* 123
+* 123.1
+* 123.2
+* ...
+
+**Tablespaces**
+
+PostgreSQL allows "escaping" the PGDATA directory by means of `tablespaces`. 
+
+A tablespace is a sotrage space that ba can outside the PGDATA directory. PostgreSQL provides the `TABLESPACE` feature to manage this
+```shell
+$ oid2name -s
+All tablespaces:
+   Oid  Tablespace Name
+-----------------------
+  1663       pg_default
+  1664        pg_global
+
+```
