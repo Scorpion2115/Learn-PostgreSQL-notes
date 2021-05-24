@@ -136,8 +136,50 @@ WINDOW w as (order by x) ;
 ```
 ![img](img/cdr.png)
 
-7. `NTILE`: groups the rows sorted in the partition
+8. `NTILE`: groups the rows sorted in the partition
 ```sql
 select x,ntile(3) over w from (select generate_series(1,6) as x) V WINDOW w as (order by x) ;
 ```
 ![img](img/ntile.png)
+
+
+## Using advanced statement window functions
+### The frame clause : allows us to manage partitions in a different way:
+1. Rows between `start_point` and `end_point`:
+
+This query returns an incremental sum of row by row
+```sql
+SELECT x, SUM(x) OVER w "sum(x)"
+FROM (select generate_series(1,5) as x) V
+WINDOW w AS (ORDER BY x ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW);
+```
+![img](img/frame_row.png)
+
+This is how does it work: The `UNBOUNDED PRECEDING` pointer keeps on the 1st row, while the `CURRENT ROW` pointer moves from the 1st to the last row
+![img](img/frame_diagram.png)
+
+
+```sql
+SELECT x, SUM(x) OVER w
+FROM (select generate_series(1,5) as x) V
+WINDOW w AS (ORDER BY x RANGE BETWEEN 1 PRECEDING AND CURRENT ROW);
+
+
+SELECT x, SUM(x) OVER w
+FROM (select generate_series(1,5) as x) V
+WINDOW w AS (ORDER BY X ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING);
+```
+
+2. Range between `start_point` and `end_point`:
+
+The difference between `RANGE` and `ROW` is the `RANGE` will combine all rows with duplicated values
+
+
+```sql
+SELECT x, row_number() OVER w1, SUM(x) OVER w1 "sum(x) RANGE", SUM(x) OVER w2 "sum(x) ROWS"
+FROM (select generate_series(1,10) % 5 as x) V
+WINDOW w1 AS (ORDER BY x RANGE BETWEEN 1 PRECEDING AND CURRENT ROW),
+w2 AS (ORDER BY x ROWS BETWEEN 1 PRECEDING AND CURRENT ROW);
+```
+![img](img/frame_range.png)
+
