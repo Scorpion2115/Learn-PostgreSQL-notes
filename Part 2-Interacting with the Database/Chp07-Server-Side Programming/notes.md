@@ -172,5 +172,3 @@ END;
 $BODY$
 LANGUAGE 'plpgsql';
 ```
-
-#### 3.3 Control Structure
