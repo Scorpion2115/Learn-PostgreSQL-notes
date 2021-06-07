@@ -1,11 +1,14 @@
-# Chapter 7: Server-Side Programming
+# Chapter 8: Triggers and Rules
 
 ## The following topics are covered in this chapter:
-* Exploring data type
-* Exploring functions and languages
+* Exploring rules in PostgreSQL 
+* Managing triggers in PostgreSQL 
+* Event triggers
 <br></br>
 
-## Exploring data type (The NoSQL data type)
-### 1. HSTORE: store key-value pairs in a single value
-
-```
+## Exploring rules in PostgreSQL
+To manage all event with write operation:
+* INSERT
+* DELETE
+* UPDATE
+### 1. Understanding the OLD and NEW variables
